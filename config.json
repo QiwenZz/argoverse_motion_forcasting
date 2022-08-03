@@ -1,0 +1,9 @@
+{
+    "train_path": "../forcasting/train/data",
+    "val_path": "data/val/val/val/data",
+    "batch_size": 8,
+    "hidden_units": 512,
+    "num_layers": 2,
+    "learning_rate": 0.000001,
+    "epoch" : 5
+  }
