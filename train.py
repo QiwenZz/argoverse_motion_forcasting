@@ -19,12 +19,13 @@ def train_model(dataloader, config, device):
     train_loader, val_loader = dataloader
 
     model, optimizer, loss_function = prepare_model(config, device)
-    model.train()
+
     train_loss = []
     vali_loss = []
     early_stop = EarlyStopping()
 
     for epoch_count in range(config['epoch']):
+        model.train()
         if (epoch_count+1) % 10 == 0:
             print('epoch {}:'.format(epoch_count+1))
         train_loss_epoch = 0
