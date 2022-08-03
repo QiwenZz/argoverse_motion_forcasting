@@ -1,6 +1,6 @@
 {
-    "train_path": "data/sample_train/data",
-    "val_path": "data/val/val/val/data",
+    "train_path": "data/val/val/val/data",
+    "val_path": "data/sample_train/data",
     "batch_size": 8,
     "hidden_units": 512,
     "num_layers": 2,

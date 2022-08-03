@@ -33,7 +33,6 @@ def train_model(dataloader, config, device):
             data, target = x.to(device), y.to(device)
             optimizer.zero_grad()
             output = model(data)
-
             loss = loss_function(output, target)
             train_loss_epoch += loss.item()
             loss.backward()
