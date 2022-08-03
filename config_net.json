@@ -1,0 +1,9 @@
+{
+  "train_path": "drive/MyDrive/forcasting_data/train/train/data",
+  "val_path": "drive/MyDrive/forcasting_data/val/val/data",
+  "batch_size": 8,
+  "hidden_units": 512,
+  "num_layers": 2,
+  "learning_rate": 0.000001,
+  "epoch" : 5
+}
