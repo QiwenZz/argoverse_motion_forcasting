@@ -19,6 +19,8 @@ default model is linear model
 
 ### File Structures
 
+- `notebook` file: 
+  - `EDA_trajectory_prediction.ipynb`: Exploratory Data Analysis for training data
 - `run.py` runs the entire project to train and validate the model
 - `config.json` constructs the parameters for the deep learning models
 - `dataloader.py` loads the data and reconstruct data into useable format
