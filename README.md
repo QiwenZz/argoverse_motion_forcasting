@@ -1,4 +1,4 @@
-# vehicle trajectory prediction
+# Vehicle Trajectory Prediction
 
 The project predicts the xy coordinates of the trajectory of vehicle 
 
@@ -31,6 +31,7 @@ default model is linear model
 ## Authors
 
 Lehan Li ll3745@nyu.edu
+Qiwen Zhang qz2274@nyu.edu
 
 
 ## Acknowledgments
