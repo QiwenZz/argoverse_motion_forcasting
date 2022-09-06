@@ -31,6 +31,7 @@ default model is linear model
 ## Authors
 
 Lehan Li ll3745@nyu.edu
+
 Qiwen Zhang qz2274@nyu.edu
 
 
