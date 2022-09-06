@@ -1,24 +1,36 @@
 from tqdm import tqdm
 import torch
 from models import baselineLSTM
+from models import linearModel
 import torch.nn as nn
 from utils import EarlyStopping
 import os
 import matplotlib.pyplot as plt
+import sys
 
-def prepare_model(config, device):
-    model = baselineLSTM(config)
+def prepare_model(config, device, model_type):
+    # Print the type of the variable, sys.argv
+    if model_type == 'LSTM': 
+        model = baselineLSTM(config)
+        model.load_state_dict(torch.load('lstm.pt'))
+    elif model_type == 'linear': 
+        model = linearModel(config)
+        model.load_state_dict(torch.load('linear.pt'))
+    model.eval()
+    
     model = model.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=config['learning_rate'])
     loss_function = nn.MSELoss()
 
     return model, optimizer, loss_function
+    
 
-def train_model(dataloader, config, device):
+
+def train_model(dataloader, config, device, model_type):
 
     train_loader, val_loader = dataloader
 
-    model, optimizer, loss_function = prepare_model(config, device)
+    model, optimizer, loss_function = prepare_model(config, device, model_type)
 
     train_loss = []
     vali_loss = []
@@ -31,10 +43,14 @@ def train_model(dataloader, config, device):
         train_loss_epoch = 0
         for i, (x,y) in enumerate(tqdm(train_loader)):
             data, target = x.to(device), y.to(device)
-            optimizer.zero_grad()
-            output = model(data)
+            if model_type == 'LSTM': 
+                mixed = torch.cat([data, target], 1)
+                output = model(mixed[:,:-1,:])[:,-5:,:]
+            elif model_type == 'linear': 
+                output = model(data)
             loss = loss_function(output, target)
             train_loss_epoch += loss.item()
+            optimizer.zero_grad()
             loss.backward()
             optimizer.step()
         val_loss_epoch = vali_model(model, loss_function, val_loader, device)
@@ -50,36 +66,22 @@ def train_model(dataloader, config, device):
         if early_stop.early_stop:
             break
 
-
-
-    os.makedirs("./results/{}".format('test_model_result'))
-    # accuracy plots
-    plt.figure(figsize=(10, 7))
-    # loss plots
-    plt.figure(figsize=(10, 7))
-    plt.plot(train_loss, color='orange', label='train loss')
-    plt.plot(vali_loss, color='red', label='validataion loss')
-    plt.xlabel('Epochs')
-    plt.ylabel('Loss')
-    plt.title('Loss comparison between training and validation set')
-    plt.legend()
-    plt.savefig("./results/{}".format('test_model_result'))
-
     return model
 
 
-def vali_model(model, loss_function, vali_loader, device):
+def vali_model(model, loss_function, vali_loader, device, model_type):
     model.eval()
-
     val_loss = 0
 
     with torch.no_grad():
         for data, target in vali_loader:
             data, target = data.to(device), target.to(device)
-            outputs = model(data)
+            if model_type == 'LSTM': 
+                outputs = model.forward_test(data)
+            elif model_type == 'linear': 
+                outputs = model(data)
             loss = loss_function(outputs, target)
             val_loss += loss.item()
-
         val_loss = val_loss / len(vali_loader.dataset)
 
         return val_loss

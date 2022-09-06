@@ -7,19 +7,13 @@ from torch.utils.data import Dataset, DataLoader
 from train import train_model
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--on_net', default=False, type=lambda x: (str(x).lower() == 'true'),
-                    help='Whether to train locally or on google collab')
-
-
+parser.add_argument('--model_type', default='linear', nargs='?',
+                    help='Choose a model type for prediction')
 args = vars(parser.parse_args())
 
 def main(args):
-    if args['on_net']:
-        config_path = 'config_net.json'
-    else:
-        config_path = 'config.json'
-
     # read from json file
+    print(args)
     f = open('config.json')
     config = json.load(f)
     batch_size = config['batch_size']
@@ -37,8 +31,8 @@ def main(args):
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=False, collate_fn=my_collate, num_workers=0)
     val_data = ArgoverseDataset(data_path=config['val_path'])
     val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=False, collate_fn=my_collate, num_workers=0)
-    model = train_model((train_loader, val_loader), config, device)
-    torch.save(model.state_dict(), 'first.pt')
+    model = train_model((train_loader, val_loader), config, device, args['model_type'])
+    torch.save(model.state_dict(), 'linear.pt')
 
 if __name__ == "__main__":
     main(args)
