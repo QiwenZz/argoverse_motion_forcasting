@@ -1,9 +1,0 @@
-{
-  "train_path": "/content/train",
-  "val_path": "/content/val",
-  "batch_size": 8,
-  "hidden_units": 512,
-  "num_layers": 2,
-  "learning_rate": 0.00001,
-  "epoch" : 2
-}
